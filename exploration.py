@@ -16,9 +16,9 @@ api = tweepy.API(auth)
 q = '#Cardio OR #Cycling OR #Elliptical OR #FitFam OR #FitLife OR #Fitness OR #FitnessAddict OR #GetOutside OR #GetStrong OR #GirlsWhoLift OR #GymLife OR #GymTime OR #NoPainNoGain OR #PersonalTrainer OR #Sweat OR #Treadmill OR #Weights OR #WeightTraining OR #Workout'
 
 geolocator = Nominatim()
-location = geolocator.geocode("94305")
+location = geolocator.geocode("30301")
 geocode_str = str(location.latitude) + ',' + str(location.longitude) + ',15mi'
-#37.4262942886,-122.157360145,15mi
+#37.4262942886,-122.157360145,15mi for zip code 94305
 
 print(geocode_str)
 

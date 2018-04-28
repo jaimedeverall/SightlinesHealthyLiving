@@ -3,7 +3,7 @@ import os
 import csv
 
 def zip2LatLng(zipcode):
-    with open('zipcodes.csv', 'rb') as csvfile:
+    with open('zipcodes.csv', 'rt') as csvfile:
         spamreader = csv.reader(csvfile, delimiter=',', quotechar='|')
         for i, row in enumerate(spamreader):
             if i==0:

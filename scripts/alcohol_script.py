@@ -73,11 +73,11 @@ def getHashtags(file_name):
                 hashtags.append(hashtag)
         return hashtags
 
-with open('../code_counts/San_Bernardino_alcohol.csv', 'w') as csvfile:
+with open('../code_counts/Fulton_alcohol.csv', 'w') as csvfile:
     filewriter = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_NONE)
     api = setupAPI()
     hashtags = getHashtags('alcohol.csv')
-    with open('../code_coordinates_area/San_Bernardino_results.csv', 'rt') as csvfile:
+    with open('../code_coordinates_area/Fulton_results.csv', 'rt') as csvfile:
         reader = csv.reader(csvfile, delimiter=',', quotechar='|')
         for i, row in enumerate(reader):
             if i==0:

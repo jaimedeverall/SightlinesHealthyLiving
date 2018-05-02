@@ -4,6 +4,16 @@ import os
 import csv
 import math
 
+def zip2LatLng(zipcode):
+    with open('original_files/zipcodes.csv', 'rb') as csvfile:
+        spamreader = csv.reader(csvfile, delimiter=',', quotechar='|')
+        for i, row in enumerate(spamreader):
+            if i==0:
+                continue
+            zip = row[0].strip('"')
+            if zip == zipcode:
+                return (float(row[5]), float(row[6]))
+
 def hashtags2Query(hashtags):
     q = ''
     for i, hashtag in enumerate(hashtags):
@@ -58,19 +68,16 @@ def getHashtags(file_name):
         reader = csv.reader(csvfile, delimiter=',', quotechar='|')
         hashtags = []
         for i, row in enumerate(reader):
-            if i==0:
-                continue
-            else:
-                hashtag = row[0]
-                if '#' in hashtag:
-                    hashtags.append(hashtag)
+            hashtag = row[0]
+            if '#' in hashtag:
+                hashtags.append(hashtag)
         return hashtags
 
-with open('../code_counts/New_York_alcohol.csv', 'w') as csvfile:
+with open('../code_counts/San_Bernardino_alcohol.csv', 'w') as csvfile:
     filewriter = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_NONE)
     api = setupAPI()
     hashtags = getHashtags('alcohol.csv')
-    with open('../code_coordinates_area/New_York_results.csv', 'rt') as csvfile:
+    with open('../code_coordinates_area/San_Bernardino_results.csv', 'rt') as csvfile:
         reader = csv.reader(csvfile, delimiter=',', quotechar='|')
         for i, row in enumerate(reader):
             if i==0:
@@ -83,4 +90,3 @@ with open('../code_counts/New_York_alcohol.csv', 'w') as csvfile:
                 print("")
                 new_row = [code, count]
                 filewriter.writerow(new_row)
-            #write this to a file

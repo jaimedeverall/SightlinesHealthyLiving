@@ -4,6 +4,16 @@ import os
 import csv
 import math
 
+def zip2LatLng(zipcode):
+    with open('original_files/zipcodes.csv', 'rb') as csvfile:
+        spamreader = csv.reader(csvfile, delimiter=',', quotechar='|')
+        for i, row in enumerate(spamreader):
+            if i==0:
+                continue
+            zip = row[0].strip('"')
+            if zip == zipcode:
+                return (float(row[5]), float(row[6]))
+
 def hashtags2Query(hashtags):
     q = ''
     for i, hashtag in enumerate(hashtags):

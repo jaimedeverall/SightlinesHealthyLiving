@@ -14,27 +14,27 @@ def zip2LatLng(zipcode):
             if zip == zipcode:
                 return (float(row[5]), float(row[6]))
 
-def hashtags2Query(hashtags):
+def terms2Query(terms):
     q = ''
-    for i, hashtag in enumerate(hashtags):
-        if i < len(hashtags) - 1:
-            q += (hashtag + ' OR ')
+    for i, term in enumerate(terms):
+        if i < len(terms) - 1:
+            q += (term + ' OR ')
         else:
-            q += hashtag
+            q += term
     return q
 
 def formGeocodeString(lat, lng, rad, unit):
     return str(lat) + ',' + str(lng) + ',' + str(rad) + unit
 
-def getCount(api, hashtags, geocode, items):
-    #print(geocode)
-    q = hashtags2Query(hashtags)
+def getCount(api, terms, geocode, items):
+    q = terms2Query(terms)
     results = tweepy.Cursor(api.search, q=q, count=100, geocode=geocode).items(items)
     count = 0
     for tweet in results:
         #print(tweet)
-        for hashtag in hashtags:
-            if hashtag.lower() in tweet.text.lower():
+        count += 1
+        for term in terms:
+            if term.lower() in tweet.text.lower():
                 count += 1
                 #print(count)
                 #print(tweet.text)
@@ -48,7 +48,7 @@ def setupAPI():
     api = tweepy.API(auth, wait_on_rate_limit=True)
     return api
 
-def row2TweetCount(row, api, hashtags):
+def row2TweetCount(row, api, terms):
     area_sq_m = int(row[1])
     lat = row[2]
     lng = row[3]
@@ -60,34 +60,34 @@ def row2TweetCount(row, api, hashtags):
     else:
         rad_km = int(rad_km)
     geocode = formGeocodeString(lat, lng, rad_km, 'km')
-    return getCount(api, hashtags, geocode, 1000)
+    return getCount(api, terms, geocode, 1000)
 
 #max of 500 characters (including operators)
-def getHashtags(file_name):
-    with open('../hashtags/' + file_name, 'rt') as csvfile:
+def getTerms(file_name):
+    with open('../terms/' + file_name, 'rt') as csvfile:
         reader = csv.reader(csvfile, delimiter=',', quotechar='|')
-        hashtags = []
+        terms = []
         for i, row in enumerate(reader):
             if i==0:
                 continue
             else:
-                hashtag = row[0]
-                if '#' in hashtag:
-                    hashtags.append(hashtag)
-        return hashtags
+                term = row[0]
+                if len(term) > 0:
+                    terms.append(term)
+        return terms
 
-with open('../code_counts/Fulton_exercise.csv', 'a') as csvfile:
+with open('../code_counts/Fulton_exercise_words.csv', 'a') as csvfile:
     filewriter = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_NONE)
     api = setupAPI()
-    hashtags = getHashtags('top_40_instagram.csv')
+    terms = getTerms('exercise_words.csv')
     with open('../code_coordinates_area/Fulton_results.csv', 'rt') as csvfile:
         reader = csv.reader(csvfile, delimiter=',', quotechar='|')
         for i, row in enumerate(reader):
-            if i<158:
+            if i<195:#<158
                 continue
             else:
                 code = row[0]
-                count = row2TweetCount(row, api, hashtags)
+                count = row2TweetCount(row, api, terms)
                 print(code)
                 print(count)
                 print("")

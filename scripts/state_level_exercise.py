@@ -26,20 +26,23 @@ def terms2Query(terms):
 def formGeocodeString(lat, lng, rad, unit):
     return str(lat) + ',' + str(lng) + ',' + str(rad) + unit
 
+#Returns a tuple of total tweets found as well as total tweets that contain terms
 def getCount(api, terms, geocode, items):
     q = terms2Query(terms)
     results = tweepy.Cursor(api.search, q=q, count=100, geocode=geocode).items(items)
     count = 0
+    totalCount = 0
     for tweet in results:
         #print(tweet)
+        totalCount += 1
         for term in terms:
             if term.lower() in tweet.text.lower():
                 count += 1
-                #print(count)
-                #print(tweet.text)
-                #print(" ")
+                print(count)
+                print(tweet.text)
+                print(" ")
                 break
-    return count
+    return (count, totalCount)
 
 def setupAPI():
     auth = tweepy.OAuthHandler(os.environ.get('TWITTER_API_KEY'), os.environ.get('TWITTER_API_SECRET'))
@@ -72,21 +75,10 @@ def getTerms(file_name):
                 terms.append(term)
         return terms
 
-with open('../code_counts/Fulton_exercise_words.csv', 'a') as csvfile:
-    filewriter = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_NONE)
-    api = setupAPI()
-    terms = getTerms('exercise_words.csv')
-    with open('../code_coordinates_area/Fulton_results.csv', 'rt') as csvfile:
-        reader = csv.reader(csvfile, delimiter=',', quotechar='|')
-        for i, row in enumerate(reader):
-            if i==0:#<158
-                continue
-            else:
-                code = row[0]
-                count = row2TweetCount(row, api, terms)
-                print(code)
-                print(count)
-                print("")
-                new_row = [code, count]
-                filewriter.writerow(new_row)
-            #write this to a file
+api = setupAPI()
+terms = getTerms('state_level_exercise.csv')
+lat = 37.166111
+lng = -119.449444
+#Area = 121,697
+geocode = formGeocodeString(lat, lng, 228, 'mi')
+print(getCount(api, terms, geocode, 5000))

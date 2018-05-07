@@ -11,4 +11,3 @@ with open('Massachusetts_state_results.csv', 'w') as csvfile:
 			lng = row1[7]
 			new_row = [code, area, lat, lng]
 			filewriter.writerow(new_row)
-

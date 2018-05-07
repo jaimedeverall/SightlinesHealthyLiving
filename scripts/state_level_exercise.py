@@ -76,9 +76,7 @@ def getTerms(file_name):
         return terms
 
 api = setupAPI()
-terms = getTerms('state_level_exercise.csv')
-lat = 37.166111
-lng = -119.449444
+terms = getTerms('top_40_instagram_workout.csv')
 #Area = 121,697
 geocode = formGeocodeString(lat, lng, 228, 'mi')
 print(getCount(api, terms, geocode, 5000))

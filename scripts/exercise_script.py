@@ -82,14 +82,14 @@ mongoUri = 'mongodb://' + os.environ.get('DATABASE_USERNAME') + ':' + \
     os.environ.get('DATABASE_PASSWORD') + '@ds217360.mlab.com:17360/sightlines'
 client = MongoClient(mongoUri)
 db = client['sightlines']
-result = db['alabama']
+result = db['arizona']
 tweetsSeen = db['tweetsSeen']
 
 api = setupAPI()
 terms = getTerms('top_40_instagram_workout.csv')
 q = terms2Query(terms)
 
-with open('../state_census_tracts/Alabama_state_results.csv', 'rt') as csvfile:
+with open('../state_census_tracts/Arizona_state_results.csv', 'rt') as csvfile:
     reader = csv.reader(csvfile, delimiter=',', quotechar='|')
     for i, row in enumerate(reader):
         if i==0:#<158
@@ -97,6 +97,8 @@ with open('../state_census_tracts/Alabama_state_results.csv', 'rt') as csvfile:
         code = row[0]
         match = result.find_one({'_id': code})
         if match is not None:
+            print(i)
+            print("")
             continue
         count, rad_km, lat, lng = row2TweetCount(api, row, q, terms, tweetsSeen)
         print(i)

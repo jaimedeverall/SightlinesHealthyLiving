@@ -82,14 +82,14 @@ mongoUri = 'mongodb://' + os.environ.get('DATABASE_USERNAME') + ':' + \
     os.environ.get('DATABASE_PASSWORD') + '@ds217360.mlab.com:17360/sightlines'
 client = MongoClient(mongoUri)
 db = client['sightlines']
-result = db['washington']
-tweetsSeen = db['tweetsSeen']
+result = db['arizonaWords']
+tweetsSeen = db['tweetsSeenWords']
 
 api = setupAPI()
-terms = getTerms('top_40_instagram_workout.csv')
+terms = getTerms('exercise_words.csv')
 q = terms2Query(terms)
 
-with open('../state_census_tracts/Washington_state_results.csv', 'rt') as csvfile:
+with open('../state_census_tracts/Arizona_state_results.csv', 'rt') as csvfile:
     reader = csv.reader(csvfile, delimiter=',', quotechar='|')
     for i, row in enumerate(reader):
         if i==0:#<158

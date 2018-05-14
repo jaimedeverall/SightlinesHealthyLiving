@@ -33,17 +33,12 @@ def getCount(api, q, terms, geocode, tweetsSeen):
     for tweet in results:
         tweetFound = tweetsSeen.find_one({'_id': tweet.id})
         if tweetFound is not None:
-            continue
-
-        for term in terms:
-            if term.lower() in tweet.text.lower():
-                document = {'_id': tweet.id}
-                tweetsSeen.insert_one(document)
-                count += 1
-                break
-                #print(count)
-                #print(tweet.text)
-                #print(" ")
+            for term in terms:
+                if term.lower() in tweet.text.lower():
+                    document = {'_id': tweet.id}
+                    tweetsSeen.insert_one(document)
+                    count += 1
+                    break
     return count
 
 def setupAPI():

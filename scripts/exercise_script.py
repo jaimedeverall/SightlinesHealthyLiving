@@ -27,19 +27,22 @@ def terms2Query(terms):
 def formGeocodeString(lat, lng, rad, unit):
     return str(lat) + ',' + str(lng) + ',' + str(rad) + unit
 
-def getCount(api, q, terms, geocode, tweetsSeen):
+def getTweets(api, q, terms, geocode, tweetsSeen, usersSeen):
     results = tweepy.Cursor(api.search, q=q, count=100, geocode=geocode).items(1000)
-    count = 0
+    tweetIDs = []
     for tweet in results:
         tweetFound = tweetsSeen.find_one({'_id': tweet.id})
-        if tweetFound is not None:
+        userFound = usersSeen.find_one({'_id': tweet.user.id})
+        if tweetFound is None and userFound is None:
             for term in terms:
                 if term.lower() in tweet.text.lower():
-                    document = {'_id': tweet.id}
-                    tweetsSeen.insert_one(document)
-                    count += 1
+                    tweetDocument = {'_id': tweet.id}
+                    tweetsSeen.insert_one(tweetDocument)
+                    userDocument = {'_id': tweet.user.id}
+                    usersSeen.insert_one(userDocument)
+                    tweetIDs.append(tweet.id)
                     break
-    return count
+    return tweetIDs
 
 def setupAPI():
     auth = tweepy.OAuthHandler(os.environ.get('TWITTER_API_KEY'), os.environ.get('TWITTER_API_SECRET'))
@@ -47,7 +50,7 @@ def setupAPI():
     api = tweepy.API(auth, wait_on_rate_limit=True)
     return api
 
-def row2TweetCount(api, row, q, terms, tweetsSeen):
+def row2TweetCount(api, row, q, terms, tweetsSeen, usersSeen):
     area_sq_m = int(row[1])
     lat = float(row[2])
     lng = float(row[3])
@@ -58,8 +61,8 @@ def row2TweetCount(api, row, q, terms, tweetsSeen):
     else:
         rad_km = int(rad_km)
     geocode = formGeocodeString(lat, lng, rad_km, 'km')
-    count = getCount(api, q, terms, geocode, tweetsSeen)
-    return (count, rad_km, lat, lng)
+    tweetIDs = getTweets(api, q, terms, geocode, tweetsSeen, usersSeen)
+    return (len(tweetIDs), tweetIDs, rad_km, lat, lng)
 
 #max of 500 characters (including operators)
 def getTerms(file_name):
@@ -77,8 +80,21 @@ mongoUri = 'mongodb://' + os.environ.get('DATABASE_USERNAME') + ':' + \
     os.environ.get('DATABASE_PASSWORD') + '@ds217360.mlab.com:17360/sightlines'
 client = MongoClient(mongoUri)
 db = client['sightlines']
+#arizonaWords
+#alabamaWords
+#massachussetsWords
+#washingtonWords
 result = db['arizonaWords']
-tweetsSeen = db['tweetsSeenWords']
+#tweetsSeenArizonaWords
+#tweetsSeenAlabamaWords
+#tweetsSeenMassachussetsWords
+#tweetsSeenWashingtonWords
+tweetsSeen = db['tweetsSeenArizonaWords']
+#usersSeenArizonaWords
+#usersSeenAlabamaWords
+#usersSeenMassachussetsWords
+#usersSeenWashingtonWords
+usersSeen = db['usersSeenArizonaWords']
 
 api = setupAPI()
 terms = getTerms('exercise_words.csv')
@@ -95,10 +111,10 @@ with open('../state_census_tracts/Arizona_state_results.csv', 'rt') as csvfile:
             print(i)
             print("")
             continue
-        count, rad_km, lat, lng = row2TweetCount(api, row, q, terms, tweetsSeen)
+        count, tweetIDs, rad_km, lat, lng = row2TweetCount(api, row, q, terms, tweetsSeen, usersSeen)
         print(i)
         print(code)
         print(count)
         print("")
-        document = {'_id': code, 'rad_km': rad_km, 'latitude': lat , 'longitude': lng, 'count': count}
+        document = {'_id': code, 'rad_km': rad_km, 'latitude': lat , 'longitude': lng, 'count': count, 'tweetIDs': tweetIDs}
         result.insert_one(document)

@@ -21,7 +21,7 @@ def terms2Query(terms):
     return urllib.quote_plus(q)
 
 #top_40_instagram_workout.csv
-terms = getTerms('exercise_words.csv')
+terms = getTerms('statistical_exercise_words.csv')
 query = terms2Query(terms)
 print(query)
 print(len(query))

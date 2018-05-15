@@ -80,24 +80,24 @@ mongoUri = 'mongodb://' + os.environ.get('DATABASE_USERNAME') + ':' + \
     os.environ.get('DATABASE_PASSWORD') + '@ds217360.mlab.com:17360/sightlines'
 client = MongoClient(mongoUri)
 db = client['sightlines']
-#arizonaWords
-#alabamaWords
-#massachussetsWords
-#washingtonWords
-result = db['arizonaWords']
-#tweetsSeenArizonaWords
-#tweetsSeenAlabamaWords
-#tweetsSeenMassachussetsWords
-#tweetsSeenWashingtonWords
-tweetsSeen = db['tweetsSeenArizonaWords']
-#usersSeenArizonaWords
-#usersSeenAlabamaWords
-#usersSeenMassachussetsWords
-#usersSeenWashingtonWords
-usersSeen = db['usersSeenArizonaWords']
+#arizonaStatisticalWords
+#alabamaStatisticalWords
+#massachussetsStatisticalWords
+#washingtonStatisticalWords
+result = db['arizonaStatisticalWords']
+#tweetsSeenArizonaStatisticalWords
+#tweetsSeenAlabamaStatisticalWords
+#tweetsSeenMassachussetsStatisticalWords
+#tweetsSeenWashingtonStatisticalWords
+tweetsSeen = db['tweetsSeenArizonaStatisticalWords']
+#usersSeenArizonaStatisticalWords
+#usersSeenAlabamaStatisticalWords
+#usersSeenMassachussetsStatisticalWords
+#usersSeenWashingtonStatisticalWords
+usersSeen = db['usersSeenArizonaStatisticalWords']
 
 api = setupAPI()
-terms = getTerms('exercise_words.csv')
+terms = getTerms('statistical_exercise_words.csv')
 q = terms2Query(terms)
 
 with open('../state_census_tracts/Arizona_state_results.csv', 'rt') as csvfile:

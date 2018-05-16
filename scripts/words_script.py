@@ -14,14 +14,21 @@ def terms2Query(terms):
     return urllib.quote_plus(q)
 
 def getTweets(api, q, terms):
+    usersSeen = []
+    tweetsSeen = []
     tweet_dict = {}
     results = tweepy.Cursor(api.search, q=q, count=100).items(5000)
     count = 0
     for tweet in results:
         print count
-        tweet_text = tweet.text
-        for word in tweet_text.split():
-            if not word.startswith("#"):
+        user_id = tweet.user.id
+        tweet_id = tweet.id
+        if tweet_id not in tweetsSeen and user_id not in usersSeen:
+            tweetsSeen.append(tweet_id)
+            usersSeen.append(user_id)
+            tweet_text = tweet.text
+            for word in tweet_text.split():
+                #if not word.startswith("#"):
                 if word.lower() in tweet_dict:
                     tweet_dict[word.lower()] += 1
                 else:
@@ -53,4 +60,3 @@ terms = getTerms('top_40_instagram_workout.csv')
 q = terms2Query(terms)
 api = setupAPI()
 getTweets(api, q, terms)
-

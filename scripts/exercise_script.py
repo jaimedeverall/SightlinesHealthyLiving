@@ -84,20 +84,20 @@ db = client['sightlines']
 #alabamaStatisticalWords
 #massachussetsStatisticalWords
 #washingtonStatisticalWords
-result = db['alabamaStatisticalWords']
+result = db['alabamaStatisticalTerms']
 #tweetsSeenArizonaStatisticalWords
 #tweetsSeenAlabamaStatisticalWords
 #tweetsSeenMassachussetsStatisticalWords
 #tweetsSeenWashingtonStatisticalWords
-tweetsSeen = db['tweetsSeenAlabamaStatisticalWords']
+tweetsSeen = db['tweetsSeenAlabamaStatisticalTerms']
 #usersSeenArizonaStatisticalWords
 #usersSeenAlabamaStatisticalWords
 #usersSeenMassachussetsStatisticalWords
 #usersSeenWashingtonStatisticalWords
-usersSeen = db['usersSeenAlabamaStatisticalWords']
+usersSeen = db['usersSeenAlabamaStatisticalTerms']
 
 api = setupAPI()
-terms = getTerms('statistical_exercise_words.csv')
+terms = getTerms('statistical_exercise_terms.csv')
 q = terms2Query(terms)
 
 with open('../state_census_tracts/Alabama_state_results.csv', 'rt') as csvfile:

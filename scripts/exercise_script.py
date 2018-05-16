@@ -84,23 +84,23 @@ db = client['sightlines']
 #alabamaStatisticalWords
 #massachussetsStatisticalWords
 #washingtonStatisticalWords
-result = db['arizonaStatisticalWords']
+result = db['alabamaStatisticalWords']
 #tweetsSeenArizonaStatisticalWords
 #tweetsSeenAlabamaStatisticalWords
 #tweetsSeenMassachussetsStatisticalWords
 #tweetsSeenWashingtonStatisticalWords
-tweetsSeen = db['tweetsSeenArizonaStatisticalWords']
+tweetsSeen = db['tweetsSeenAlabamaStatisticalWords']
 #usersSeenArizonaStatisticalWords
 #usersSeenAlabamaStatisticalWords
 #usersSeenMassachussetsStatisticalWords
 #usersSeenWashingtonStatisticalWords
-usersSeen = db['usersSeenArizonaStatisticalWords']
+usersSeen = db['usersSeenAlabamaStatisticalWords']
 
 api = setupAPI()
 terms = getTerms('statistical_exercise_words.csv')
 q = terms2Query(terms)
 
-with open('../state_census_tracts/Arizona_state_results.csv', 'rt') as csvfile:
+with open('../state_census_tracts/Alabama_state_results.csv', 'rt') as csvfile:
     reader = csv.reader(csvfile, delimiter=',', quotechar='|')
     for i, row in enumerate(reader):
         if i==0:#<158
@@ -108,13 +108,14 @@ with open('../state_census_tracts/Arizona_state_results.csv', 'rt') as csvfile:
         code = row[0]
         match = result.find_one({'_id': code})
         if match is not None:
-            print(i)
+            print("i={}".format(i))
             print("")
             continue
         count, tweetIDs, rad_km, lat, lng = row2TweetCount(api, row, q, terms, tweetsSeen, usersSeen)
-        print(i)
-        print(code)
-        print(count)
+        print("i={}".format(i))
+        print("code={}".format(code))
+        print("count={}".format(count))
+        print("rad_km={}".format(rad_km))
         print("")
         document = {'_id': code, 'rad_km': rad_km, 'latitude': lat , 'longitude': lng, 'count': count, 'tweetIDs': tweetIDs}
         result.insert_one(document)

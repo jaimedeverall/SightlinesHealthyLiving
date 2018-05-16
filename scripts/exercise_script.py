@@ -84,23 +84,23 @@ db = client['sightlines']
 #alabamaStatisticalWords
 #massachussetsStatisticalWords
 #washingtonStatisticalWords
-result = db['alabamaStatisticalTerms']
+result = db['arizonaStatisticalTerms']
 #tweetsSeenArizonaStatisticalWords
 #tweetsSeenAlabamaStatisticalWords
 #tweetsSeenMassachussetsStatisticalWords
 #tweetsSeenWashingtonStatisticalWords
-tweetsSeen = db['tweetsSeenAlabamaStatisticalTerms']
+tweetsSeen = db['tweetsSeenArizonaStatisticalTerms']
 #usersSeenArizonaStatisticalWords
 #usersSeenAlabamaStatisticalWords
 #usersSeenMassachussetsStatisticalWords
 #usersSeenWashingtonStatisticalWords
-usersSeen = db['usersSeenAlabamaStatisticalTerms']
+usersSeen = db['usersSeenArizonaStatisticalTerms']
 
 api = setupAPI()
 terms = getTerms('statistical_exercise_terms.csv')
 q = terms2Query(terms)
 
-with open('../state_census_tracts/Alabama_state_results.csv', 'rt') as csvfile:
+with open('../state_census_tracts/Arizona_state_results.csv', 'rt') as csvfile:
     reader = csv.reader(csvfile, delimiter=',', quotechar='|')
     for i, row in enumerate(reader):
         if i==0:#<158
